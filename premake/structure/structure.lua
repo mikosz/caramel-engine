@@ -85,7 +85,7 @@ end
 
 local create_test_projects = function(name, is_library, common_settings)
 	if not table.isempty(os.matchfiles("test/**.cpp")) then
-		create_source_project(name.."-unit-testtest")
+		create_source_project(name.."-unit-test", "test")
 			kind "ConsoleApp"
 			targetdir(target_dir_path("tests"))
 			includedirs { "src/" }
@@ -101,7 +101,7 @@ local create_test_projects = function(name, is_library, common_settings)
 	end
 
 	if not table.isempty(os.matchfiles("functional-test/**.cpp")) then
-		create_source_project(name.."-functional-testfunctional-test")
+		create_source_project(name.."-unit-test", "test")
 			kind "ConsoleApp"
 			targetdir(target_dir_path("tests"))
 			includedirs { "src/" }
@@ -120,7 +120,7 @@ end
 local gather_headers = function()
 	for _, file in pairs(os.matchfiles("src/**.hpp")) do
 		local source = path.getabsolute(file)
-		local target = file:gsub("src/")
+		local target = file:gsub("src/", "")
 		headers[source] = target
 	end
 end
