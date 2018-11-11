@@ -22,17 +22,24 @@ public:
 
 	const Field& field(StringId name) const noexcept;
 
+	StringId name() const noexcept {
+		return name_;
+	}
+
 private:
 
     using Fields = std::vector<Field>;
 
-	StringId name_;
+	const StringId name_;
 
-	Fields fields_;
+	const Fields fields_;
 
 	Fields::const_iterator findField(StringId name) const noexcept;
 
 };
+
+template <class T>
+class RTTI;
 
 } // namespace caramel::engine::rtti
 

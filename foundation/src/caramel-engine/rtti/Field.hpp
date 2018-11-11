@@ -24,22 +24,30 @@ public:
 	{
 	}
 
+	const Type& type() const noexcept {
+		return type_;
+	}
+
 	const StringId& name() const noexcept {
 		return name_;
 	}
 
+	const void* get(const void* object) const noexcept {
+		return reinterpret_cast<const char*>(object) + offset_;
+	}
+
 	template <class T>
 	const T& value(const void* object) const noexcept {
-		return *reinterpret_cast<const T*>(reinterpret_cast<const char*>(object) + offset_);
+		return *reinterpret_cast<const T*>(get(object));
 	}
 
 private:
 
 	const Type& type_;
 
-    StringId name_;
+    const StringId name_;
 
-	size_t offset_;
+	const size_t offset_;
 
 };
 
