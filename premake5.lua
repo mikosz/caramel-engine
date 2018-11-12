@@ -2,6 +2,7 @@ structure = require "structure"
 
 include "googletest.lua"
 include "googlebenchmark.lua"
+include "caramelpoly.lua"
 
 ROOT_DIR = path.getabsolute(".")
 
@@ -70,6 +71,8 @@ workspace "caramel-engine"
 		defines { "_SCL_SECURE_NO_WARNINGS" }
 	filter {}
 
+	use_caramelpoly()
+	
 	structure.set_group "foundation"
 		include "foundation"
 	

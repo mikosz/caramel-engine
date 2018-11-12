@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <string>
 
+#include <caramel-poly/Poly.hpp>
+
 #include "caramel-engine/Singleton.hpp"
 #include "Type.hpp"
 
@@ -44,6 +46,20 @@ private:
 
 };
 
+constexpr auto RTTI_METHOD_LABEL = POLY_FUNCTION_LABEL("rtti");
+
+struct RTTIObject : decltype(poly::requires(
+	RTTI_METHOD_LABEL = poly::method<const Type& () const>
+	))
+{
+};
+
 } // namespace caramel::engine::rtti
+
+template <class T>
+constexpr auto caramel::poly::defaultConceptMap<caramel::engine::rtti::RTTIObject, T> = caramel::poly::makeConceptMap(
+	caramel::engine::rtti::RTTI_METHOD_LABEL =
+		[](const auto&) -> decltype(auto) { return caramel::engine::rtti::RTTI<T>::instance(); }
+	);
 
 #endif /* CARAMELENGINE_FOUNDATION_RTTI_HPP__ */
