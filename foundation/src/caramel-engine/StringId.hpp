@@ -62,11 +62,15 @@ private:
 
     Registry registry_;
 
+	Strings() = default;
+
     const std::string& get(StringId::Hash hash) const {
         const auto it = registry_.find(hash);
         assert(it != registry_.end());
         return it->second;
     }
+
+	friend class Singleton<Strings>;
 
     friend class StringId;
 

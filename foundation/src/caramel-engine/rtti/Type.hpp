@@ -38,9 +38,6 @@ private:
 
 };
 
-template <class T>
-class RTTI;
-
 } // namespace caramel::engine::rtti
 
 #endif /* CARAMELENGINE_FOUNDATION_TYPE_HPP__ */

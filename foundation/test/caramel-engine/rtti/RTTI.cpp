@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "caramel-engine/rtti/Type.hpp"
+#include "caramel-engine/rtti/RTTI.hpp"
+#include "caramel-engine/Singleton.hpp"
 
 using namespace caramel::engine;
 using namespace caramel::engine::rtti;
@@ -17,26 +19,45 @@ struct Main {
 	Other o;
 };
 
-TEST(RttiTypeTest, FieldsAreAccessible) {
-	const auto intType = Type{ "int", {} };
-	const auto floatType = Type{ "float", {} };
-	const auto stringType = Type{ "std::string", {} };
+} // anonymous namespace
 
-	const auto otherRtti = Type{
-		"Other",
-		{
-			Field{ stringType, "s", &Other::s }
-		}
-	};
+template <>
+class RTTI<Other> : public Singleton<RTTI<Other>>, public Type {
+private:
 
-	const auto mainRtti = Type{
-		"Main",
-		{
-			Field{ intType, "i", &Main::i },
-			Field{ floatType, "f", &Main::f },
-			Field{ otherRtti, "o", &Main::o }
-		}
-	};
+	RTTI() :
+		Type("Other", {
+			Field{ RTTI<std::string>::instance(), "s", &Other::s }
+			})
+	{
+	}
+
+	friend class Singleton<RTTI<Other>>;
+
+};
+
+template <>
+class RTTI<Main> : public Singleton<RTTI<Main>>, public Type {
+private:
+
+	RTTI() :
+		Type("Main", {
+			Field{ RTTI<int>::instance(), "i", &Main::i },
+			Field{ RTTI<float>::instance(), "f", &Main::f },
+			Field{ RTTI<Other>::instance(), "o", &Main::o }
+			})
+	{
+	}
+
+	friend class Singleton<RTTI<Main>>;
+
+};
+
+namespace /* anonymous */ {
+
+TEST(RttiTypeTest, TypeAccessThroughRTTITemplate) {
+	const auto& mainRtti = RTTI<Main>::instance();
+	const auto& otherRtti = RTTI<Other>::instance();
 
 	const auto m = Main{ 42, 3.14f, { "Hey there!" }};
 

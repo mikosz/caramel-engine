@@ -1,7 +1,6 @@
 #ifndef CARAMELENGINE_SINGLETON_HPP__
 #define CARAMELENGINE_SINGLETON_HPP__
 
-#include <type_traits>
 #include <cassert>
 #include <cstdlib>
 
@@ -9,7 +8,7 @@ namespace caramel::engine {
 
 template <class T>
 struct SingletonTraits {
-    static constexpr auto ALLOW_ON_THE_FLY_CREATION = std::is_default_constructible_v<T>;
+    static constexpr auto ALLOW_ON_THE_FLY_CREATION = true;
 };
 
 template <class T>
@@ -47,9 +46,16 @@ public:
         return **theInstance;
     }
 
+	Singleton(const Singleton&) = delete;
+	Singleton(const Singleton&&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&&) = delete;
+
 protected:
 
-    Singleton() = default;
+	Singleton() {
+		assert(*instanceHolder() == nullptr);
+	}
 
 private:
 

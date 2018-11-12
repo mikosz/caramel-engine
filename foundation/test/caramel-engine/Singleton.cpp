@@ -6,15 +6,32 @@ using namespace caramel::engine;
 
 namespace /* anonymous */ {
 
-struct DefaultConstructible : Singleton<DefaultConstructible> {
+class DefaultConstructible : public Singleton<DefaultConstructible> {
+private:
+
+	DefaultConstructible() = default;
+
+	friend class Singleton<DefaultConstructible>;
+
 };
 
-struct DefaultConstructibleDisableOnTheFly : Singleton<DefaultConstructibleDisableOnTheFly> {
+class DefaultConstructibleDisableOnTheFly : public Singleton<DefaultConstructibleDisableOnTheFly> {
+private:
+
+	DefaultConstructibleDisableOnTheFly() = default;
+
+	friend class Singleton<DefaultConstructibleDisableOnTheFly>;
+
 };
 
-struct NonDefaultConstructible : Singleton<NonDefaultConstructible> {
+class NonDefaultConstructible : public Singleton<NonDefaultConstructible> {
+private:
+
     NonDefaultConstructible(int) {
     }
+
+	friend class Singleton<NonDefaultConstructible>;
+
 };
 
 } // anonymous namespace
@@ -23,6 +40,11 @@ namespace caramel::engine {
 
 template <>
 struct SingletonTraits<DefaultConstructibleDisableOnTheFly> {
+    static constexpr auto ALLOW_ON_THE_FLY_CREATION = false;
+};
+
+template <>
+struct SingletonTraits<NonDefaultConstructible> {
     static constexpr auto ALLOW_ON_THE_FLY_CREATION = false;
 };
 
